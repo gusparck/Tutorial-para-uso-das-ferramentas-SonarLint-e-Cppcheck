@@ -1,0 +1,1 @@
+# Tutorial-para-uso-das-ferramentas-SonarLint-e-Cppcheck
