@@ -1,4 +1,4 @@
-# Tutorial para uso das ferramentas SonarLint e Cppcheck (Linux)
+# Tutorial para uso da ferramenta Cppcheck (Linux)
 ## Etapa 1 - Uso do Cppcheck
 ### Passo 1 - Instalação do Cppcheck via APT
 Abra um terminal (Ctrl + Alt + T) e digite os seguintes comandos sequencialmente:
