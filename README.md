@@ -15,7 +15,7 @@ cppcheck --enable=all "Nome do diretório onde o arquivo analisado está"
 ```
 Existem outros comandos como:
 ```
--all: Habilita todas as checagens (pode gerar falsos positivos).
+---enable=all: Habilita todas as checagens (pode gerar falsos positivos).
 
 -warning: Checagens de advertência.
 
@@ -110,7 +110,13 @@ cppcheck --enable=all --inconclusive --force --xml zephyr/nome_do_diretorio/nome
 Formata a saída dos resultados da análise (os "code smells") em formato XML, que é ideal para integração com outras ferramentas, como o cppcheck-gui.
 
 2> cppcheck_single.xml
-Redireciona as mensagens de diagnóstico e erro para um arquivo;
+Redireciona a saída de erro padrão (stderr) para um arquivo, onde o cppcheck imprime todos os avisos, erros e resultados de análise.
+
+Em seguida execute o comando:
+```
+cppcheck-htmlreport --file=cppcheck_single.xml --report-dir=cppcheck-html-single --source-dir=. --title="Relatório - nome arquivo analisado"
+```
+Esse comando usa o arquivo XML gerado anteriormente e converte para uma página HTML navegável.
 
 ### Passo 4 - Visualização do arquivo HTML
 O comando abaixo permitirá a visualização do arquivo gerado no passo anterior através de uma aba que será aberta no seu navegador.
