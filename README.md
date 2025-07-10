@@ -1,4 +1,5 @@
 # Tutorial para uso da ferramenta Cppcheck (Linux)
+
 ## Etapa 1 - Uso do Cppcheck
 ### Passo 1 - Instalação do Cppcheck via APT
 Abra um terminal (Ctrl + Alt + T) e digite os seguintes comandos sequencialmente:
@@ -6,6 +7,7 @@ Abra um terminal (Ctrl + Alt + T) e digite os seguintes comandos sequencialmente
 sudo apt update
 sudo apt install cppcheck
 ```
+
 ### Passo 2 - Ativação de mensagens e outras opções úteis
 É importante ativar as mensagens que retornarão feedback a respeito dos code smells detectados. É possível fazer isso através do comando:
 ```
@@ -33,12 +35,14 @@ Existem outros comandos como:
 
 -xml: Gera a saída em formato XML, útil para integração com outras ferramentas.
 ```
+
 ### Passo 3 - Ir até o diretório desejado
 Use os seguintes comandos para ir até o diretório onde se encontra o seu arquivo que será analisado:
 ```
 cd "nome do diretório geral"
 cd "nome do diretório onde está o arquivo para análise"
 ```
+
 ### Passo 4 - Análise do arquivo
 Através do comando abaixo você poderá executar a análise do arquivo se já estiver dentro do diretório onde ele está armazenado, exemplo:
 - Meu diretório geral se chama "Documentos"
@@ -56,6 +60,7 @@ Após isso utilizar o comando, abaixo:
 ```
 cppcheck .
 ```
+
 ## Etapa 2 - Uso do Cppcheck em projetos maiores (ex. Zephyr)
 ### Passo 1 - Criar um workspace e clonar o repositório do projeto a ser analisado (no nosso caso, o Zephyr)
 Execute os seguintes comandos em ordem sequencial (o _west_ é uma meta-ferramenta do Zephyr, por isso seu uso aqui, normalmente o CMake seria o utilizado):
@@ -69,10 +74,50 @@ cd "digite_nome_do_novo_diretório"
 # O west agora baixa o repositório do Zephyr e seus módulos
 west update
 ```
+
 ### Passo 2 - Configuração e execução da análise do projeto
 Antes de realizar esse passo, certifique-se de que está na raiz do workspace criado (comando _cd_).
-Feito isso, execute o seguinte comando:
+
+*É importante destacar que nesse tutorial a execução do cppcheck dentro de um projeto de software de um tamanho considerável, como o Zephyr, está focada na análise de smells dentro de um diretório específico e não do todo, afim de evitar problemas na ferramenta e falta de coesão nas detecções.*
+
+Partindo disso, execute o seguinte comando:
 ```
-west build -b native_sim -t cppcheck zephyr/samples/basic/blinky -- -DCONFIG_CPPCHECK=y -DCONFIG_CPPCHECK_EXTRA_ARGS="--enable=all --library=std"
+cppcheck --enable=all --inconclusive --force zephyr/nome_do_diretorio/nome_do_arquivo.c 2> cppcheck_single.log
 ```
-ainda em produção...*
+#### Descrição do comando:
+--enable=all
+Ativa um conjunto completo de verificações, incluindo avisos de estilo, performance, portabilidade e possíveis bugs, para uma análise bem abrangente.
+
+--inconclusive
+Instrui a ferramenta a reportar também os avisos "inconclusivos", que são problemas em potencial mas que o Cppcheck não tem certeza se são erros reais.
+
+--force
+Força a análise a continuar mesmo que hajam erros de configuração, como a falta de arquivos de cabeçalho, o que pode diminuir a precisão dos resultados.
+
+2> cppcheck_single.log
+É uma operação do terminal que redireciona todas as mensagens de erro ou diagnóstico do Cppcheck para um arquivo de log, em vez de exibi-las na tela.
+
+*Após esse comando já seria possível terminar a execução do tutorial, entretando o relatório .log tem uma finalidade mais imediatista, é utilizado para uma análise mais sucinta e breve, apenas para verificar se há erros. Devido a isso, recomenda-se utilizar dos próximos passos para uma análise de melhor visualização e compreensão*
+
+### Passo 3 - Geração de arquivo HTML para visualização da análise realizada
+Tendo sido realizada a análise, é necessário a geração de um arquivo HTML para uma melhor visualização e compreensão dos resultados da ferramenta. 
+Execute o comando:
+```
+cppcheck --enable=all --inconclusive --force --xml zephyr/nome_do_diretorio/nome_do_arquivo.c 2> cppcheck_single.xml
+```
+#### Descrição do comando: 
+--xml
+Formata a saída dos resultados da análise (os "code smells") em formato XML, que é ideal para integração com outras ferramentas, como o cppcheck-gui.
+
+2> cppcheck_single.xml
+Redireciona as mensagens de diagnóstico e erro para um arquivo;
+
+### Passo 4 - Visualização do arquivo HTML
+O comando abaixo permitirá a visualização do arquivo gerado no passo anterior através de uma aba que será aberta no seu navegador.
+```
+xdg-open cppcheck-html-single/index.html
+```
+
+----------------------------
+
+*Para executar o cppcheck em um arquivo diferente dentro do projeto em análise, basta utilizar o comando ```Ctrl + C``` após o passo 4 e executar os passos a partir da etapa 2 novamente.*
