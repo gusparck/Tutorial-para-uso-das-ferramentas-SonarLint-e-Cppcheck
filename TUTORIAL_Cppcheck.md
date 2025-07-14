@@ -15,7 +15,7 @@ cppcheck --enable=all "Nome do diretório onde o arquivo analisado está"
 ```
 Existem outros comandos como:
 ```
----enable=all: Habilita todas as checagens (pode gerar falsos positivos).
+--enable=all: Habilita todas as checagens (pode gerar falsos positivos).
 
 -warning: Checagens de advertência.
 
